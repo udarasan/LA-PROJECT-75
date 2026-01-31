@@ -1,5 +1,6 @@
 package com.example.layeredarchitecture.controller;
 
+import com.example.layeredarchitecture.dao.CustomerDAO;
 import com.example.layeredarchitecture.dao.CustomerDAOImpl;
 import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.model.CustomerDTO;
@@ -37,6 +38,8 @@ public class ManageCustomersFormController {
     public TextField txtCustomerAddress;
     public TableView<CustomerTM> tblCustomers;
     public JFXButton btnAddNewCustomer;
+    //property injection
+    CustomerDAO customerDAO = new CustomerDAOImpl();
 
     public void initialize() {
         tblCustomers.getColumns().get(0).setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -69,8 +72,9 @@ public class ManageCustomersFormController {
         tblCustomers.getItems().clear();
         /*Get all customers*/
         try {
-            CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+            //tight coupling--->Loose couple
             ArrayList<CustomerDTO> customerDTOArrayList=customerDAO.getAllCustomers();
+
             for (CustomerDTO customerDTO : customerDTOArrayList) {
                 tblCustomers.getItems().add(new CustomerTM(
                         customerDTO.getId(),
@@ -143,8 +147,7 @@ public class ManageCustomersFormController {
                 if (existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, id + " already exists").show();
                 }
-
-                CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+            //tight coupling--->Loose couple
                 customerDAO.saveCustomer(id, name, address);
 
                 tblCustomers.getItems().add(new CustomerTM(id, name, address));
@@ -161,14 +164,7 @@ public class ManageCustomersFormController {
                 if (!existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
                 }
-//                Connection connection = DBConnection.getDbConnection().getConnection();
-//                PreparedStatement pstm = connection.prepareStatement("UPDATE Customer SET name=?, address=? WHERE id=?");
-//                pstm.setString(1, name);
-//                pstm.setString(2, address);
-//                pstm.setString(3, id);
-//                pstm.executeUpdate();
-
-                CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+                //tight coupling--->Loose couple
                 customerDAO.updateCustomer(id,name,address);
 
             } catch (SQLException e) {
@@ -188,7 +184,7 @@ public class ManageCustomersFormController {
 
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+        //tight coupling--->Loose couple
         return customerDAO.existCustomer(id);
     }
 
@@ -200,7 +196,8 @@ public class ManageCustomersFormController {
             if (!existCustomer(id)) {
                 new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
             }
-            CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+            //tight coupling--->Loose couple
+
             customerDAO.deleteCustomer(id);
 
             tblCustomers.getItems().remove(tblCustomers.getSelectionModel().getSelectedItem());
@@ -216,7 +213,6 @@ public class ManageCustomersFormController {
 
     private String generateNewId() {
         try {
-            CustomerDAOImpl customerDAO = new CustomerDAOImpl();
            return customerDAO.generateNewID();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new id " + e.getMessage()).show();

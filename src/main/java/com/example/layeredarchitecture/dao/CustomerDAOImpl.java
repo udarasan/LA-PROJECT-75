@@ -7,8 +7,8 @@ import com.example.layeredarchitecture.model.CustomerDTO;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class CustomerDAOImpl {
-
+public class CustomerDAOImpl implements CustomerDAO {
+    @Override
     public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
         ResultSet rst=CRUDUtil.execute("SELECT * FROM Customer");
         ArrayList<CustomerDTO> customers=new ArrayList<CustomerDTO>();
@@ -21,9 +21,11 @@ public class CustomerDAOImpl {
         }
         return customers;
     }
+    @Override
     public void saveCustomer(String id, String name, String address) throws SQLException, ClassNotFoundException {
         CRUDUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)",id,name,address);
     }
+    @Override
     public void updateCustomer(String id, String name, String address) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("UPDATE Customer SET name=?, address=? WHERE id=?");
@@ -32,6 +34,7 @@ public class CustomerDAOImpl {
         pstm.setString(3, id);
         pstm.executeUpdate();
     }
+    @Override
     public void deleteCustomer(String id) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
         PreparedStatement pstm = connection.prepareStatement("DELETE FROM Customer WHERE id=?");
@@ -39,6 +42,7 @@ public class CustomerDAOImpl {
         pstm.executeUpdate();
 
     }
+    @Override
     public String generateNewID() throws SQLException, ClassNotFoundException {
         ResultSet rst =CRUDUtil.execute("SELECT id FROM Customer ORDER BY id DESC LIMIT 1;");
         if (rst.next()) {
@@ -49,11 +53,13 @@ public class CustomerDAOImpl {
             return "C00-001";
         }
     }
+    @Override
     public boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
         ResultSet rst=CRUDUtil
                 .execute("SELECT * FROM Customer WHERE id=?", id);
         return rst.next();
     }
+    @Override
     public CustomerDTO findCustomer(String id) throws SQLException, ClassNotFoundException {
         ResultSet rst = CRUDUtil.execute("SELECT * FROM Customer WHERE id=?",id);
         if (rst.next()) {
