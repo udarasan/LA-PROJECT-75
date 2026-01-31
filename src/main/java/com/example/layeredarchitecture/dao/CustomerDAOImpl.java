@@ -10,9 +10,7 @@ import java.util.ArrayList;
 public class CustomerDAOImpl {
 
     public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        Statement stm = connection.createStatement();
-        ResultSet rst = stm.executeQuery("SELECT * FROM Customer");
+        ResultSet rst=CRUDUtil.execute("SELECT * FROM Customer");
         ArrayList<CustomerDTO> customers=new ArrayList<CustomerDTO>();
         while (rst.next()) {
             String id=rst.getString("id");
@@ -24,12 +22,7 @@ public class CustomerDAOImpl {
         return customers;
     }
     public void saveCustomer(String id, String name, String address) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("INSERT INTO Customer (id,name, address) VALUES (?,?,?)");
-        pstm.setString(1, id);
-        pstm.setString(2, name);
-        pstm.setString(3, address);
-        pstm.executeUpdate();
+        CRUDUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)",id,name,address);
     }
     public void updateCustomer(String id, String name, String address) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
