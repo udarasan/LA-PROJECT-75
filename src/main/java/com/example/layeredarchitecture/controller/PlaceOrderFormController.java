@@ -242,11 +242,13 @@ public class PlaceOrderFormController {
     private void loadAllItemCodes() {
         try {
             /*Get all items*/
-            Connection connection = DBConnection.getDbConnection().getConnection();
+            /*Connection connection = DBConnection.getDbConnection().getConnection();
             Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM Item");
-            while (rst.next()) {
-                cmbItemCode.getItems().add(rst.getString("code"));
+            ResultSet rst = stm.executeQuery("SELECT * FROM Item");*/
+            ItemDAOImpl itemDAO = new ItemDAOImpl();
+            ArrayList<ItemDTO> itemDTOS=itemDAO.loadAllItems();
+            for (ItemDTO item : itemDTOS) {
+                cmbItemCode.getItems().add(item.getCode());
             }
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
