@@ -346,15 +346,18 @@ public class PlaceOrderFormController {
         /*Transaction*/
         Connection connection = null;
         try {
-            connection = DBConnection.getDbConnection().getConnection();
+            /*connection = DBConnection.getDbConnection().getConnection();
             PreparedStatement stm = connection.prepareStatement("SELECT oid FROM `Orders` WHERE oid=?");
-            stm.setString(1, orderId);
+            stm.setString(1, orderId);*/
+            OrderDAOImpl orderDAO = new OrderDAOImpl();
+            boolean b1=orderDAO.exitsOrder(orderId);
             /*if order id already exist*/
-            if (stm.executeQuery().next()) {
-
+            if (b1) {
+                //Alert
             }
 
             connection.setAutoCommit(false);
+
             stm = connection.prepareStatement("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)");
             stm.setString(1, orderId);
             stm.setDate(2, Date.valueOf(orderDate));
