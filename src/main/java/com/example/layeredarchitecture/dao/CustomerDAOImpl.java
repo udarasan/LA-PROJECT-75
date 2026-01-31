@@ -65,7 +65,6 @@ public class CustomerDAOImpl {
     }
     public CustomerDTO findCustomer(String id) throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();
-
         String query = "SELECT * FROM Customer WHERE id=?";
         PreparedStatement pstm = connection.prepareStatement(query);
         pstm.setString(1, id);
