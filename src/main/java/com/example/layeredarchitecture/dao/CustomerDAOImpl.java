@@ -40,8 +40,7 @@ public class CustomerDAOImpl {
 
     }
     public String generateNewID() throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        ResultSet rst = connection.createStatement().executeQuery("SELECT id FROM Customer ORDER BY id DESC LIMIT 1;");
+        ResultSet rst =CRUDUtil.execute("SELECT id FROM Customer ORDER BY id DESC LIMIT 1;");
         if (rst.next()) {
             String id = rst.getString("id");
             int newCustomerId = Integer.parseInt(id.replace("C00-", "")) + 1;
@@ -51,19 +50,12 @@ public class CustomerDAOImpl {
         }
     }
     public boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("SELECT id FROM Customer WHERE id=?");
-        pstm.setString(1, id);
-        return pstm.executeQuery().next();
+        ResultSet rst=CRUDUtil
+                .execute("SELECT * FROM Customer WHERE id=?", id);
+        return rst.next();
     }
     public CustomerDTO findCustomer(String id) throws SQLException, ClassNotFoundException {
-        Connection connection = DBConnection.getDbConnection().getConnection();
-        String query = "SELECT * FROM Customer WHERE id=?";
-        PreparedStatement pstm = connection.prepareStatement(query);
-        pstm.setString(1, id);
-
-        ResultSet rst = pstm.executeQuery();
-
+        ResultSet rst = CRUDUtil.execute("SELECT * FROM Customer WHERE id=?",id);
         if (rst.next()) {
             return new CustomerDTO(
                     rst.getString("id"),
