@@ -1,5 +1,9 @@
 package com.example.layeredarchitecture.controller;
 
+import com.example.layeredarchitecture.dao.custom.CustomerDAO;
+import com.example.layeredarchitecture.dao.custom.ItemDAO;
+import com.example.layeredarchitecture.dao.custom.OrderDAO;
+import com.example.layeredarchitecture.dao.custom.OrderDetailDAO;
 import com.example.layeredarchitecture.dao.custom.impl.CustomerDAOImpl;
 import com.example.layeredarchitecture.dao.custom.impl.ItemDAOImpl;
 import com.example.layeredarchitecture.dao.custom.impl.OrderDAOImpl;
@@ -54,6 +58,10 @@ public class PlaceOrderFormController {
     public Label lblDate;
     public Label lblTotal;
     private String orderId;
+    CustomerDAO customerDAO=new CustomerDAOImpl();
+    ItemDAO itemDAO=new ItemDAOImpl();
+    OrderDAO orderDAO=new OrderDAOImpl();
+    OrderDetailDAO orderDetailDAO=new OrderDetailDAOImpl();
 
     public void initialize() throws SQLException, ClassNotFoundException {
 
@@ -104,14 +112,6 @@ public class PlaceOrderFormController {
                             new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + newValue + "").show();
                         }
 
-//                        PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Customer WHERE id=?");
-//                        pstm.setString(1, newValue + "");
-//                        ResultSet rst = pstm.executeQuery();
-//                        rst.next();
-//                        CustomerDTO customerDTO = new CustomerDTO(newValue + "", rst.getString("name"), rst.getString("address"));
-
-                        CustomerDAOImpl  customerDAO = new CustomerDAOImpl();
-
                         // Find Customer
                         CustomerDTO customer = customerDAO.findCustomer(newValue + "");
 
@@ -142,7 +142,6 @@ public class PlaceOrderFormController {
 //                        throw new NotFoundException("There is no such item associated with the id " + code);
                     }
 //                    Find Item
-                    ItemDAOImpl itemDAO = new ItemDAOImpl();
                     ItemDTO item = itemDAO.findItem(newItemCode + "");
 
                     // Set to Label
@@ -189,30 +188,16 @@ public class PlaceOrderFormController {
     }
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
-        /*Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("SELECT code FROM Item WHERE code=?");
-        pstm.setString(1, code);
-        return pstm.executeQuery().next();*/
-        ItemDAOImpl itemDAO = new ItemDAOImpl();
         return itemDAO.existsItem(code);
     }
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        /*Connection connection = DBConnection.getDbConnection().getConnection();
-        PreparedStatement pstm = connection.prepareStatement("SELECT id FROM Customer WHERE id=?");
-        pstm.setString(1, id);
-        return pstm.executeQuery().next();*/
-        CustomerDAOImpl customerDAO = new CustomerDAOImpl();
         return customerDAO.existCustomer(id);
     }
 
 
     public String generateNewOrderId() {
         try {
-//            Connection connection = DBConnection.getDbConnection().getConnection();
-//            Statement stm = connection.createStatement();
-//            ResultSet rst = stm.executeQuery("SELECT oid FROM `Orders` ORDER BY oid DESC LIMIT 1;");
-            OrderDAOImpl orderDAO = new OrderDAOImpl();
             return orderDAO.generateNewOrderId();
 
         } catch (SQLException e) {
@@ -225,10 +210,6 @@ public class PlaceOrderFormController {
 
     private void loadAllCustomerIds() {
         try {
-            /*Connection connection = DBConnection.getDbConnection().getConnection();
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM Customer");*/
-            CustomerDAOImpl customerDAO=new CustomerDAOImpl();
             ArrayList<CustomerDTO> customers=customerDAO.getAllCustomers();
             for (CustomerDTO customer : customers) {
                 cmbCustomerId.getItems().add(customer.getId());
@@ -244,10 +225,6 @@ public class PlaceOrderFormController {
     private void loadAllItemCodes() {
         try {
             /*Get all items*/
-            /*Connection connection = DBConnection.getDbConnection().getConnection();
-            Statement stm = connection.createStatement();
-            ResultSet rst = stm.executeQuery("SELECT * FROM Item");*/
-            ItemDAOImpl itemDAO = new ItemDAOImpl();
             ArrayList<ItemDTO> itemDTOS=itemDAO.loadAllItems();
             for (ItemDTO item : itemDTOS) {
                 cmbItemCode.getItems().add(item.getCode());
@@ -352,7 +329,6 @@ public class PlaceOrderFormController {
         Connection connection = null;
         try {
             connection= DBConnection.getDbConnection().getConnection();
-            OrderDAOImpl orderDAO = new OrderDAOImpl();
             boolean b1=orderDAO.exitsOrder(orderId);
             /*if order id already exist*/
             if (b1) {
@@ -361,8 +337,7 @@ public class PlaceOrderFormController {
 
             connection.setAutoCommit(false);
 
-            OrderDAOImpl orderDAO2 = new OrderDAOImpl();
-            boolean b2 = orderDAO2.saveOrder(new OrderDTO(orderId,orderDate,customerId));
+            boolean b2 = orderDAO.saveOrder(new OrderDTO(orderId,orderDate,customerId));
 
             if (!b2) {
                 connection.rollback();
@@ -370,7 +345,6 @@ public class PlaceOrderFormController {
                 return false;
             }
             for (OrderDetailDTO detail : orderDetails) {
-                OrderDetailDAOImpl orderDetailDAO = new OrderDetailDAOImpl();
                 boolean b3=orderDetailDAO.saveOrderDetails(detail);
 
                 if (!b3) {
@@ -382,7 +356,6 @@ public class PlaceOrderFormController {
                 ItemDTO item = findItem(detail.getItemCode());
                 item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
 
-                ItemDAOImpl itemDAO = new ItemDAOImpl();
                 boolean b4=itemDAO.updateItem(item);
 
                 if (!b4) {
@@ -407,12 +380,6 @@ public class PlaceOrderFormController {
 
     public ItemDTO findItem(String code) {
         try {
-            /*Connection connection = DBConnection.getDbConnection().getConnection();
-            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
-            pstm.setString(1, code);
-            ResultSet rst = pstm.executeQuery();
-            rst.next();*/
-            ItemDAOImpl itemDAO = new ItemDAOImpl();
             ItemDTO itemDTO=itemDAO.findItem(code);
             return new ItemDTO(code, itemDTO.getDescription(), itemDTO.getUnitPrice(), itemDTO.getQtyOnHand());
         } catch (SQLException e) {

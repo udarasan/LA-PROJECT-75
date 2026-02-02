@@ -28,7 +28,7 @@ public class ItemDAOImpl implements ItemDAO {
             return CRUDUtil.execute("INSERT INTO Item (code, description, unitPrice, qtyOnHand) VALUES (?,?,?,?)",itemDTO.getCode(),itemDTO.getDescription(),itemDTO.getUnitPrice(),itemDTO.getQtyOnHand());
         }
         public boolean updateItem(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
-            return CRUDUtil.execute("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?",itemDTO.getDescription(),itemDTO.getUnitPrice(),itemDTO.getQtyOnHand());
+            return CRUDUtil.execute("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?",itemDTO.getDescription(),itemDTO.getUnitPrice(),itemDTO.getQtyOnHand(),itemDTO.getCode());
         }
         public boolean deleteItem(String itemCode) throws SQLException, ClassNotFoundException {
             Connection connection = DBConnection.getDbConnection().getConnection();
