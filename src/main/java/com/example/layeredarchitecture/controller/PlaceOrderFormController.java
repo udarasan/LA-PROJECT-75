@@ -113,7 +113,7 @@ public class PlaceOrderFormController {
                         }
 
                         // Find Customer
-                        CustomerDTO customer = customerDAO.findCustomer(newValue + "");
+                        CustomerDTO customer = customerDAO.find(newValue + "");
 
                         // Set To Customer name lable
                         txtCustomerName.setText(customer.getName());
@@ -192,7 +192,7 @@ public class PlaceOrderFormController {
     }
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
-        return customerDAO.existCustomer(id);
+        return customerDAO.exists(id);
     }
 
 
@@ -210,7 +210,7 @@ public class PlaceOrderFormController {
 
     private void loadAllCustomerIds() {
         try {
-            ArrayList<CustomerDTO> customers=customerDAO.getAllCustomers();
+            ArrayList<CustomerDTO> customers=customerDAO.getAll();
             for (CustomerDTO customer : customers) {
                 cmbCustomerId.getItems().add(customer.getId());
             }
