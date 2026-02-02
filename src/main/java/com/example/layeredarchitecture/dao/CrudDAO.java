@@ -11,5 +11,4 @@ public interface CrudDAO<T> {
     public String generateNewID() throws SQLException, ClassNotFoundException;
     public boolean exists(String id) throws SQLException, ClassNotFoundException;
     public T find(String id) throws SQLException, ClassNotFoundException;
-
 }
