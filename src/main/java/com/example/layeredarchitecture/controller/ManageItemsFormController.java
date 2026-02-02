@@ -71,7 +71,7 @@ public class ManageItemsFormController {
     private void loadAllItems() {
         tblItems.getItems().clear();
         try {
-            ArrayList<ItemDTO> ItemDTOArrayList=itemDAO.loadAllItems();
+            ArrayList<ItemDTO> ItemDTOArrayList=itemDAO.getAll();
             for (ItemDTO itemDTO : ItemDTOArrayList) {
                 tblItems.getItems().add(new ItemTM(
                         itemDTO.getCode(),
@@ -137,7 +137,7 @@ public class ManageItemsFormController {
             }
 
             // Delete Item
-            boolean isDelete = itemDAO.deleteItem(code);
+            boolean isDelete = itemDAO.delete(code);
 
             // Check Delete Item
             if (!isDelete) {
@@ -185,7 +185,7 @@ public class ManageItemsFormController {
                 }
 
                 ItemDTO itemDTO = new ItemDTO(code, description, unitPrice, qtyOnHand);
-                itemDAO.saveItem(itemDTO);
+                itemDAO.save(itemDTO);
                 tblItems.getItems().add(new ItemTM(code, description, unitPrice, qtyOnHand));
 
             } catch (SQLException e) {
@@ -201,7 +201,7 @@ public class ManageItemsFormController {
                 }
 
                 ItemDTO itemDTO = new ItemDTO(code, description, unitPrice, qtyOnHand);
-                itemDAO.updateItem(itemDTO);
+                itemDAO.update(itemDTO);
 
                 ItemTM selectedItem = tblItems.getSelectionModel().getSelectedItem();
                 selectedItem.setDescription(description);
@@ -221,13 +221,13 @@ public class ManageItemsFormController {
 
     private boolean existItem(String code) throws SQLException, ClassNotFoundException {
 
-        return itemDAO.existsItem(code);
+        return itemDAO.exists(code);
     }
 
 
     private String generateNewId() {
         try {
-            return itemDAO.generateNewId();
+            return itemDAO.generateNewID();
 
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();

@@ -8,20 +8,48 @@ import com.example.layeredarchitecture.model.OrderDTO;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class OrderDAOImpl implements OrderDAO {
 
-    public String generateNewOrderId() throws SQLException, ClassNotFoundException {
+    public String generateNewID() throws SQLException, ClassNotFoundException {
         ResultSet rst = CRUDUtil.execute("SELECT oid FROM `Orders` ORDER BY oid DESC LIMIT 1;");
         return rst.next() ? String.format("OID-%03d",
                 (Integer.parseInt(rst.getString("oid")
                         .replace("OID-", "")) + 1)) : "OID-001";
     }
-    public boolean exitsOrder(String orderId) throws SQLException, ClassNotFoundException {
+
+    @Override
+    public boolean exists(String id) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public OrderDTO find(String id) throws SQLException, ClassNotFoundException {
+        return null;
+    }
+
+    public boolean exits(String orderId) throws SQLException, ClassNotFoundException {
         ResultSet rst= CRUDUtil.execute("SELECT oid FROM `Orders` WHERE oid=?", orderId);
         return rst.next();
     }
-    public boolean saveOrder(OrderDTO orderDTO) throws SQLException, ClassNotFoundException {
+
+    @Override
+    public ArrayList<OrderDTO> getAll() throws SQLException, ClassNotFoundException {
+        return null;
+    }
+
+    public boolean save(OrderDTO orderDTO) throws SQLException, ClassNotFoundException {
         return CRUDUtil.execute("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)",orderDTO.getOrderId(),orderDTO.getOrderDate(),orderDTO.getCustomerId());
+    }
+
+    @Override
+    public boolean update(OrderDTO customerDTO) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public boolean delete(String id) throws SQLException, ClassNotFoundException {
+        return false;
     }
 }
