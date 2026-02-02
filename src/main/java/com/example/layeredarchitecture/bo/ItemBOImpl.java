@@ -38,4 +38,9 @@ public class ItemBOImpl implements ItemBO {
     public String generateItemNewID() throws SQLException, ClassNotFoundException {
         return itemDAO.generateNewID();
     }
+
+    @Override
+    public ItemDTO findItem(String id) throws SQLException, ClassNotFoundException {
+        return itemDAO.find(id);
+    }
 }
