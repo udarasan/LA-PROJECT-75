@@ -18,7 +18,8 @@ public class OrderDAOImpl implements OrderDAO {
                         .replace("OID-", "")) + 1)) : "OID-001";
     }
     public boolean exitsOrder(String orderId) throws SQLException, ClassNotFoundException {
-        return CRUDUtil.execute("SELECT oid FROM `Orders` WHERE oid=?", orderId);
+        ResultSet rst= CRUDUtil.execute("SELECT oid FROM `Orders` WHERE oid=?", orderId);
+        return rst.next();
     }
     public boolean saveOrder(OrderDTO orderDTO) throws SQLException, ClassNotFoundException {
         return CRUDUtil.execute("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)",orderDTO.getOrderId(),orderDTO.getOrderDate(),orderDTO.getCustomerId());
