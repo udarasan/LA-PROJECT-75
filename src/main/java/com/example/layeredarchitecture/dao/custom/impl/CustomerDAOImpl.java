@@ -65,9 +65,4 @@ public class CustomerDAOImpl implements CustomerDAO{
         return null;
     }
 
-
-    @Override
-    public void report() {
-
-    }
 }

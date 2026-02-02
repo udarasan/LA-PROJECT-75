@@ -150,7 +150,7 @@ public class ManageCustomersFormController {
                     new Alert(Alert.AlertType.ERROR, id + " already exists").show();
                 }
             //tight coupling--->Loose couple
-                customerDAO.save(new CustomerDTO(id, name, address));
+                customerBO.saveCustomer(new CustomerDTO(id, name, address));
 
                 tblCustomers.getItems().add(new CustomerTM(id, name, address));
             } catch (SQLException e) {
@@ -167,7 +167,7 @@ public class ManageCustomersFormController {
                     new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
                 }
                 //tight coupling--->Loose couple
-                customerDAO.update(new CustomerDTO(id, name, address));
+                customerBO.updateCustomer(new CustomerDTO(id, name, address));
 
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Failed to update the customer " + id + e.getMessage()).show();
@@ -187,7 +187,7 @@ public class ManageCustomersFormController {
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
         //tight coupling--->Loose couple
-        return customerDAO.exists(id);
+        return customerBO.existCustomer(id);
     }
 
 
@@ -200,7 +200,7 @@ public class ManageCustomersFormController {
             }
             //tight coupling--->Loose couple
 
-            customerDAO.delete(id);
+            customerBO.deleteCustomer(id);
 
             tblCustomers.getItems().remove(tblCustomers.getSelectionModel().getSelectedItem());
             tblCustomers.getSelectionModel().clearSelection();
@@ -215,7 +215,7 @@ public class ManageCustomersFormController {
 
     private String generateNewId() {
         try {
-           return customerDAO.generateNewID();
+           return customerBO.generateCustomerNewID();
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to generate a new id " + e.getMessage()).show();
         } catch (ClassNotFoundException e) {
