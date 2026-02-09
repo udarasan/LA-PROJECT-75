@@ -7,7 +7,7 @@ import com.example.layeredarchitecture.model.OrderDTO;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public interface PlaceOrderBO {
+public interface PlaceOrderBO extends SuperBO {
     public boolean existCustomer(String id) throws SQLException, ClassNotFoundException;
     public boolean existItem(String id) throws SQLException, ClassNotFoundException;
     public CustomerDTO findCustomer(String id) throws SQLException, ClassNotFoundException;

@@ -1,9 +1,11 @@
 package com.example.layeredarchitecture.bo.custom.impl;
 
 import com.example.layeredarchitecture.bo.custom.PlaceOrderBO;
+import com.example.layeredarchitecture.dao.DAOFactory;
 import com.example.layeredarchitecture.dao.custom.CustomerDAO;
 import com.example.layeredarchitecture.dao.custom.ItemDAO;
 import com.example.layeredarchitecture.dao.custom.OrderDAO;
+import com.example.layeredarchitecture.dao.custom.OrderDetailDAO;
 import com.example.layeredarchitecture.dao.custom.impl.CustomerDAOImpl;
 import com.example.layeredarchitecture.dao.custom.impl.ItemDAOImpl;
 import com.example.layeredarchitecture.dao.custom.impl.OrderDAOImpl;
@@ -19,9 +21,10 @@ import java.util.ArrayList;
 
 public class PlaceOrderBoImpl implements PlaceOrderBO {
 
-    CustomerDAO customerDAO = new CustomerDAOImpl();
-    ItemDAO itemDAO = new ItemDAOImpl();
-    OrderDAO  orderDAO = new OrderDAOImpl();
+    CustomerDAO customerDAO = (CustomerDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.CUSTOMER);
+    ItemDAO itemDAO = (ItemDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.ITEM);
+    OrderDAO  orderDAO = (OrderDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.ORDER);
+    OrderDetailDAO orderDetailDAO= (OrderDetailDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOTypes.ORDER_DETAIL);
     @Override
     public boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
         return customerDAO.exists(id);
