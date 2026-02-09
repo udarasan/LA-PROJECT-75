@@ -1,10 +1,9 @@
 package com.example.layeredarchitecture.bo.custom;
 
+import com.example.layeredarchitecture.bo.SuperBO;
 import com.example.layeredarchitecture.bo.custom.impl.CustomerBOImpl;
 import com.example.layeredarchitecture.bo.custom.impl.ItemBOImpl;
 import com.example.layeredarchitecture.bo.custom.impl.PlaceOrderBoImpl;
-
-import java.sql.SQLException;
 
 public class BOFactory {
     private static BOFactory instance;

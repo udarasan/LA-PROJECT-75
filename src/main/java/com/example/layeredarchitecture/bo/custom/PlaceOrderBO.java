@@ -1,8 +1,9 @@
 package com.example.layeredarchitecture.bo.custom;
 
-import com.example.layeredarchitecture.model.CustomerDTO;
-import com.example.layeredarchitecture.model.ItemDTO;
-import com.example.layeredarchitecture.model.OrderDTO;
+import com.example.layeredarchitecture.bo.SuperBO;
+import com.example.layeredarchitecture.dto.CustomerDTO;
+import com.example.layeredarchitecture.dto.ItemDTO;
+import com.example.layeredarchitecture.dto.OrderDTO;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
