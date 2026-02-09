@@ -4,31 +4,32 @@ import com.example.layeredarchitecture.dao.CRUDUtil;
 import com.example.layeredarchitecture.dao.custom.ItemDAO;
 import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.dto.ItemDTO;
+import com.example.layeredarchitecture.entity.Item;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 
 public class ItemDAOImpl implements ItemDAO {
-        public ArrayList<ItemDTO>getAll() throws  SQLException, ClassNotFoundException {
+        public ArrayList<Item>getAll() throws  SQLException, ClassNotFoundException {
         ResultSet rst = CRUDUtil.execute("SELECT * FROM Item");
-        ArrayList<ItemDTO> items=new ArrayList<>();
+        ArrayList<Item> items=new ArrayList<>();
         while (rst.next()) {
             String code=rst.getString("code");
             String description =rst.getString("description");
             BigDecimal unitPrice =rst.getBigDecimal("unitPrice");
             Integer qtyOnHand=rst.getInt("qtyOnHand");
-            ItemDTO ItemDTO=new ItemDTO(code,description,unitPrice,qtyOnHand);
-            items.add(ItemDTO);
+            Item entity=new Item(code,description,unitPrice,qtyOnHand);
+            items.add(entity);
         }
         return items;
 
         }
-        public boolean save(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
-            return CRUDUtil.execute("INSERT INTO Item (code, description, unitPrice, qtyOnHand) VALUES (?,?,?,?)",itemDTO.getCode(),itemDTO.getDescription(),itemDTO.getUnitPrice(),itemDTO.getQtyOnHand());
+        public boolean save(Item entity) throws SQLException, ClassNotFoundException {
+            return CRUDUtil.execute("INSERT INTO Item (code, description, unitPrice, qtyOnHand) VALUES (?,?,?,?)",entity.getCode(),entity.getDescription(),entity.getUnitPrice(),entity.getQtyOnHand());
         }
-        public boolean update(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
-            return CRUDUtil.execute("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?",itemDTO.getDescription(),itemDTO.getUnitPrice(),itemDTO.getQtyOnHand(),itemDTO.getCode());
+        public boolean update(Item entity) throws SQLException, ClassNotFoundException {
+            return CRUDUtil.execute("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?",entity.getDescription(),entity.getUnitPrice(),entity.getQtyOnHand(),entity.getCode());
         }
         public boolean delete(String itemCode) throws SQLException, ClassNotFoundException {
             Connection connection = DBConnection.getDbConnection().getConnection();
@@ -58,14 +59,14 @@ public class ItemDAOImpl implements ItemDAO {
                 return "I00-001";
             }
         }
-        public ItemDTO find(String itemCode) throws SQLException, ClassNotFoundException {
+        public Item find(String itemCode) throws SQLException, ClassNotFoundException {
             Connection connection = DBConnection.getDbConnection().getConnection();
             PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
             pstm.setString(1, itemCode + "");
             ResultSet rst = pstm.executeQuery();
 
             if (rst.next()) {
-                return new ItemDTO(
+                return new Item(
                         rst.getString("code"),
                         rst.getString("description"),
                         rst.getBigDecimal("unitPrice"),

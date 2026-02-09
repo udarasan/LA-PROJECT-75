@@ -4,6 +4,7 @@ import com.example.layeredarchitecture.bo.custom.CustomerBO;
 import com.example.layeredarchitecture.dao.DAOFactory;
 import com.example.layeredarchitecture.dao.custom.CustomerDAO;
 import com.example.layeredarchitecture.dto.CustomerDTO;
+import com.example.layeredarchitecture.entity.Customer;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,17 +14,22 @@ public class CustomerBOImpl implements CustomerBO {
 
     @Override
     public ArrayList<CustomerDTO> getAllCustomers() throws SQLException, ClassNotFoundException {
-        return customerDAO.getAll();
+        ArrayList<Customer> customers= customerDAO.getAll();
+        ArrayList<CustomerDTO> customerDto=new ArrayList<>();
+        for (Customer customer : customers) {
+            dto.add(new CustomerDTO(customer.getId(),customer.getName(),customer.getAddress()));
+        }
+        return customerDto;
     }
 
     @Override
     public boolean saveCustomer(CustomerDTO customer) throws SQLException, ClassNotFoundException {
-        return customerDAO.save(customer);
+        return customerDAO.save(new Customer(customer.getId(),customer.getName(),customer.getAddress()));
     }
 
     @Override
     public boolean updateCustomer(CustomerDTO customer) throws SQLException, ClassNotFoundException {
-        return customerDAO.update(customer);
+        return customerDAO.update(new  Customer(customer.getId(),customer.getName(),customer.getAddress()));
     }
 
     @Override
@@ -44,6 +50,7 @@ public class CustomerBOImpl implements CustomerBO {
 
     @Override
     public CustomerDTO findCustomer(String id) throws SQLException, ClassNotFoundException {
-        return customerDAO.find(id);
+        Customer customer= customerDAO.find(id);
+        return new CustomerDTO(customer.getId(),customer.getName(),customer.getAddress());
     }
 }
