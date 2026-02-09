@@ -6,15 +6,7 @@ public class Order {
     private String orderId;
     private LocalDate orderDate;
     private String customerId;
-    private String customerName;
-    private String orderTotal;
 
-    public  Order(String orderId,LocalDate orderDate,String customerId,String customerName,String orderTotal) {
-        this.orderId = orderId;
-        this.orderDate = orderDate;
-        this.customerId = customerId;
-        this.customerName = customerName;
-    }
     public Order() {}
 
     public Order(String orderId, LocalDate orderDate, String customerId) {
@@ -47,19 +39,4 @@ public class Order {
         this.customerId = customerId;
     }
 
-    public String getCustomerName() {
-        return customerName;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getOrderTotal() {
-        return orderTotal;
-    }
-
-    public void setOrderTotal(String orderTotal) {
-        this.orderTotal = orderTotal;
-    }
 }
