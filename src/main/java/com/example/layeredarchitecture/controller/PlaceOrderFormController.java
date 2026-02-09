@@ -317,7 +317,13 @@ public class PlaceOrderFormController {
     }
 
     public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) {
-       return placeOrderBO.saveOrder(orderId,orderDate,customerId,orderDetails);
+        try {
+            return placeOrderBO.saveOrder(orderId,orderDate,customerId,orderDetails);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

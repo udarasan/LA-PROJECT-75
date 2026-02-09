@@ -13,10 +13,14 @@ import com.example.layeredarchitecture.dto.OrderDTO;
 import com.example.layeredarchitecture.dto.OrderDetailDTO;
 import com.example.layeredarchitecture.entity.Customer;
 import com.example.layeredarchitecture.entity.Item;
+import com.example.layeredarchitecture.entity.Order;
+import com.example.layeredarchitecture.entity.OrderDetail;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlaceOrderBoImpl implements PlaceOrderBO {
 
@@ -72,7 +76,7 @@ public class PlaceOrderBoImpl implements PlaceOrderBO {
     }
 
     @Override
-    public boolean saveOrder(OrderDTO orderDTO) throws SQLException, ClassNotFoundException {
+    public boolean saveOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
         /*Transaction*/
         Connection connection = null;
         try {
@@ -85,7 +89,7 @@ public class PlaceOrderBoImpl implements PlaceOrderBO {
 
             connection.setAutoCommit(false);
 
-            boolean b2 = orderDAO.save(new OrderDTO(orderId,orderDate,customerId));
+            boolean b2 = orderDAO.save(new Order(orderId,orderDate,customerId));
 
             if (!b2) {
                 connection.rollback();
@@ -93,7 +97,7 @@ public class PlaceOrderBoImpl implements PlaceOrderBO {
                 return false;
             }
             for (OrderDetailDTO detail : orderDetails) {
-                boolean b3=orderDetailDAO.save(detail);
+                boolean b3=orderDetailDAO.save(new OrderDetail(detail.getOrderId(),detail.getItemCode(),detail.getQty(),detail.getUnitPrice()));
 
                 if (!b3) {
                     connection.rollback();
@@ -104,7 +108,7 @@ public class PlaceOrderBoImpl implements PlaceOrderBO {
                 ItemDTO item = findItem(detail.getItemCode());
                 item.setQtyOnHand(item.getQtyOnHand() - detail.getQty());
 
-                boolean b4=itemDAO.update(item);
+                boolean b4=itemDAO.update(new Item());
 
                 if (!b4) {
                     connection.rollback();
